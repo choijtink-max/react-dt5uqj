@@ -5,7 +5,9 @@ import { VirtualScroll } from '@progress/kendo-react-grid/dist/npm/VirtualScroll
 import { isFunction, size } from 'lodash';
 
 VirtualScrollFixed.prototype.reset = function () {
-  console.log('[VirtualScrollFixed.reset] called');
+  const { attendedSkip, propsSkip, realSkip, pageSize } = this;
+  const data = { attendedSkip, propsSkip, realSkip, pageSize };
+  console.log('[VirtualScrollFixed.reset] called', this);
 };
 
 // VirtualScroll.prototype.reset = function () {

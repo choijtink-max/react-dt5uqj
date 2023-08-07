@@ -34,8 +34,13 @@ const App = () => {
   const hasNext = skipped < MAX_ITEMS;
 
   useEffect(() => {
-    setData(slice(DATA, 0, pageSize));
-  }, []);
+    console.log('[useEffect] data changed', { data });
+    console.log('-----------------------');
+    console.log('- - - - - - - - - - - -');
+    console.log('-----------------------');
+    // console.log('- - - - - - - - - - - -');
+    // console.log('-----------------------');
+  }, [data]);
 
   const fetchNextPage = useCallback(
     (skip, total) => {

@@ -2,11 +2,11 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { VirtualScrollFixed } from '@progress/kendo-react-grid/dist/npm/VirtualScrollFixed';
 import { VirtualScroll } from '@progress/kendo-react-grid/dist/npm/VirtualScroll';
-import { isFunction } from 'lodash';
+import { isFunction, size } from 'lodash';
 
-// VirtualScrollFixed.prototype.reset = function () {
-//   console.log('[VirtualScrollFixed.reset] called');
-// };
+VirtualScrollFixed.prototype.reset = function () {
+  console.log('[VirtualScrollFixed.reset] called');
+};
 
 // VirtualScroll.prototype.reset = function () {
 //   console.log('[VirtualScroll.reset] called');
@@ -36,7 +36,7 @@ const GridControl = ({
         setSkip(newSkip);
 
         if (isFunction(fetchNextPage)) {
-          fetchNextPage(newSkip, data);
+          fetchNextPage(newSkip, size(data));
         }
       } else {
         setSkip(newSkip);

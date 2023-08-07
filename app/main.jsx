@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import DataCreator from './DataCreator';
 import * as ReactDOM from 'react-dom';
 import Grid from './Grid';
 import { slice, size } from 'lodash';
 
+const MAX_ITEMS = 1000;
+const selectedField = '_selectedField';
+
+const DATA = DataCreator.createRandomData(MAX_ITEMS);
 const pageSize = 25;
 
-function skipFetchNextPage(skip, pageSize, data) {
-  return skip + pageSize < size(data);
+function skipFetchNextPage(skip, pageSize, total) {
+  return total > skip + pageSize;
 }
 
 function getSelected(item, dataItem) {
@@ -18,30 +22,34 @@ function getSelected(item, dataItem) {
   return !Boolean(item[selectedField] === true);
 }
 
-const MAX_ITEMS = 1000;
-const selectedField = '_selectedField';
+function getData(from = 0, till = pageSize) {
+  return DATA.slice(from, from + till);
+}
 
 const App = () => {
   // const DATA = useMemo(() => DataCreator.createRandomData(MAX_ITEMS), []);
-  // const [data, setData] = useState(DATA.slice(0, pageSize));
-  const [data, setData] = useState(DataCreator.createRandomData(pageSize));
+  const [data, setData] = useState(getData());
+  // const [data, setData] = useState(DataCreator.createRandomData(pageSize));
   const skipped = size(data);
   const hasNext = skipped < MAX_ITEMS;
 
+  useEffect(() => {
+    setData(slice(DATA, 0, pageSize));
+  }, []);
+
   const fetchNextPage = useCallback(
-    (skip, currentData) => {
-      const total = size(currentData);
-      const props = { skip, pageSize, total };
+    (skip, total) => {
+      const props = { skip, total };
       console.log('[fetchNextPage] called', props);
-      if (!skipFetchNextPage(skip, pageSize, currentData)) {
-        const newData = DataCreator.createRandomData(pageSize, skipped);
-        // const newData = slice(DATA, total + 1, pageSize);
-        setData([...currentData, ...newData]);
+      if (!skipFetchNextPage(skip, pageSize, total)) {
+        // const newData = DataCreator.createRandomData(pageSize, skipped);
+        const newData = getData(total + 1);
+        setData((currentData) => [...currentData, ...newData]);
         console.log('[fetchNextPage] new', { data, newData });
       }
     },
+    // []
     []
-    // [DATA]
   );
 
   const selectRow = useCallback(

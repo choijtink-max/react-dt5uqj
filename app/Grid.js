@@ -4,14 +4,14 @@ import { VirtualScrollFixed } from '@progress/kendo-react-grid/dist/npm/VirtualS
 import { VirtualScroll } from '@progress/kendo-react-grid/dist/npm/VirtualScroll';
 import { isFunction, size } from 'lodash';
 
-VirtualScrollFixed.prototype.reset = function () {
-  const { attendedSkip, propsSkip, realSkip, pageSize } = this;
-  const data = { attendedSkip, propsSkip, realSkip, pageSize };
-  console.log('[VirtualScrollFixed.reset] called', this);
-};
+// VirtualScrollFixed.prototype.reset = function () {
+//   const { attendedSkip, propsSkip, realSkip, pageSize } = this;
+//   const data = { attendedSkip, propsSkip, realSkip, pageSize };
+//   console.log('[VirtualScrollFixed.reset] called', this);
+// };
 
 // VirtualScroll.prototype.reset = function () {
-//   console.log('[VirtualScroll.reset] called');
+//   console.log('[VirtualScroll.reset] called', this);
 // };
 
 const GridControl = ({
@@ -27,10 +27,11 @@ const GridControl = ({
 }) => {
   const [skip, setSkip] = useState(0);
 
-  const total = hasNext ? skipped + pageSize : size(data);
+  const total = hasNext ? skipped + pageSize : skipped;
 
   const onPageChange = useCallback(
     (event) => {
+      console.log('[onPageChange] called', event.page);
       const { skip: newSkip } = event.page;
       const numberToFetchNextPage = skipped - pageSize;
 
@@ -38,7 +39,7 @@ const GridControl = ({
         setSkip(newSkip);
 
         if (isFunction(fetchNextPage)) {
-          fetchNextPage(newSkip, size(data));
+          fetchNextPage(newSkip, skipped);
         }
       } else {
         setSkip(newSkip);
@@ -101,7 +102,6 @@ const GridControl = ({
         skip={skip}
         data={data}
         fixedScroll={false}
-        total={total}
       >
         {columns}
       </Grid>

@@ -48,9 +48,9 @@ const App = () => {
       console.log('[fetchNextPage] called', props);
       if (!skipFetchNextPage(skip, pageSize, total)) {
         // const newData = DataCreator.createRandomData(pageSize, skipped);
-        const newData = getData(total + 1);
+        const newData = getData(total);
         setData((currentData) => [...currentData, ...newData]);
-        console.log('[fetchNextPage] new', { data, newData });
+        console.log('[fetchNextPage] new', { newData });
       }
     },
     // []

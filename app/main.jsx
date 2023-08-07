@@ -22,8 +22,9 @@ const MAX_ITEMS = 1000;
 const selectedField = '_selectedField';
 
 const App = () => {
-  const DATA = useMemo(() => DataCreator.createRandomData(MAX_ITEMS), []);
-  const [data, setData] = useState(DATA.slice(0, pageSize));
+  // const DATA = useMemo(() => DataCreator.createRandomData(MAX_ITEMS), []);
+  // const [data, setData] = useState(DATA.slice(0, pageSize));
+  const [data, setData] = useState(DataCreator.createRandomData(pageSize));
   const skipped = size(data);
   const hasNext = skipped < MAX_ITEMS;
 
@@ -33,13 +34,14 @@ const App = () => {
       const props = { skip, pageSize, total };
       console.log('[fetchNextPage] called', props);
       if (!skipFetchNextPage(skip, pageSize, currentData)) {
-        // const newData = DataCreator.createRandomDat77a(pageSize, skipped);
-        const newData = slice(DATA, total + 1, pageSize);
+        const newData = DataCreator.createRandomData(pageSize, skipped);
+        // const newData = slice(DATA, total + 1, pageSize);
         setData([...currentData, ...newData]);
         console.log('[fetchNextPage] new', { data, newData });
       }
     },
-    [DATA]
+    []
+    // [DATA]
   );
 
   const selectRow = useCallback(
